@@ -12,13 +12,12 @@ import (
 
 type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
 }
 
-func OAuth2Token(clientID string, clientSecret string) (string, error) {
+func OAuth2Token(accountID string, clientID string, clientSecret string) (string, error) {
 	data := url.Values{}
 	data.Set("grant_type", "account_credentials")
-	data.Set("account_id", "Xt1aUD4WQ56w7hDhVbtDpg")
+	data.Set("account_id", accountID)
 
 	req, err := http.NewRequest("POST", "https://zoom.us/oauth/token", strings.NewReader(data.Encode()))
 	if err != nil {
@@ -61,7 +60,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	}
 
 	// establish OAuth2Token token
-	ss, err := OAuth2Token(c.Key, c.Secret)
+	ss, err := OAuth2Token(c.AccountID, c.ClientID, c.ClientSecret)
 	if err != nil {
 		return nil, err
 	}
