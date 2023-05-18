@@ -1,8 +1,8 @@
 # Zoom.us Golang Client Library
 
-[![Godoc](https://godoc.org/github.com/himalayan-institute/zoom-lib-golang?status.svg)](https://godoc.org/github.com/himalayan-institute/zoom-lib-golang)
+[![Godoc](https://godoc.org/github.com/bigdatasourav/zoom-lib-golang?status.svg)](https://godoc.org/github.com/bigdatasourav/zoom-lib-golang)
 [![Build Status](https://travis-ci.org/himalayan-institute/zoom-lib-golang.svg?branch=master)](https://travis-ci.org/himalayan-institute/zoom-lib-golang)
-[![Go Report Card](https://goreportcard.com/badge/github.com/himalayan-institute/zoom-lib-golang)](https://goreportcard.com/report/github.com/himalayan-institute/zoom-lib-golang)
+[![Go Report Card](https://goreportcard.com/badge/github.com/bigdatasourav/zoom-lib-golang)](https://goreportcard.com/report/github.com/bigdatasourav/zoom-lib-golang)
 [![CodeClimate Maintainability](https://api.codeclimate.com/v1/badges/55b7484e20c0aaae35d7/maintainability)](https://codeclimate.com/github/himalayan-institute/zoom-lib-golang/maintainability)
 
 Go (Golang) client library for the [Zoom.us REST API Version
