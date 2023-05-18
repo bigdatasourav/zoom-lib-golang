@@ -60,7 +60,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	if err != nil {
 		return nil, err
 	}
-
+	panic("ss:" + ss)
 	// set OAuth2Token Authorization header
 	req.Header.Add("Authorization", "Bearer "+ss)
 
