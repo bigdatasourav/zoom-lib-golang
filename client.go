@@ -23,30 +23,26 @@ var (
 	// when set to true
 	Debug = false
 
-	// AccountID is a package-wide Account ID, used when no client is instantiated
-	AccountID string
+	// APIKey is a package-wide API key, used when no client is instantiated
+	APIKey string
 
-	// ClientID is a package-wide Client ID, used when no client is instantiated
-	ClientID string
-
-	// ClientSecret is a package-wide Client secret, used when no client is instantiated
-	ClientSecret string
+	// APISecret is a package-wide API secret, used when no client is instantiated
+	APISecret string
 
 	defaultClient *Client
 )
 
 // Client is responsible for making API requests
 type Client struct {
-	AccountID    string
-	ClientID     string
-	ClientSecret string
-	Transport    http.RoundTripper
-	Timeout      time.Duration // set to value > 0 to enable a request timeout
-	endpoint     string
+	Key       string
+	Secret    string
+	Transport http.RoundTripper
+	Timeout   time.Duration // set to value > 0 to enable a request timeout
+	endpoint  string
 }
 
 // NewClient returns a new API client
-func NewClient(accountId string, clientId string, clientSecret string) *Client {
+func NewClient(apiKey string, apiSecret string) *Client {
 	var uri = url.URL{
 		Scheme: "https",
 		Host:   apiURI,
@@ -54,10 +50,9 @@ func NewClient(accountId string, clientId string, clientSecret string) *Client {
 	}
 
 	return &Client{
-		AccountID:    accountId,
-		ClientID:     clientId,
-		ClientSecret: clientSecret,
-		endpoint:     uri.String(),
+		Key:      apiKey,
+		Secret:   apiSecret,
+		endpoint: uri.String(),
 	}
 }
 
@@ -75,7 +70,7 @@ type requestV2Opts struct {
 func initializeDefault(c *Client) *Client {
 	if c == nil {
 		if defaultClient == nil {
-			defaultClient = NewClient(AccountID, ClientID, ClientSecret)
+			defaultClient = NewClient(APIKey, APISecret)
 		}
 
 		return defaultClient
