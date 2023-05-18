@@ -1,11 +1,13 @@
 package zoom
 
 import (
-	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 type AccessTokenResponse struct {
@@ -14,15 +16,18 @@ type AccessTokenResponse struct {
 }
 
 func OAuth2Token(clientID string, clientSecret string) (string, error) {
-	url := "https://zoom.us/oauth/token?grant_type=client_credentials"
+	data := url.Values{}
+	data.Set("grant_type", "account_credentials")
+	data.Set("account_id", "Xt1aUD4WQ56w7hDhVbtDpg")
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequest("POST", "https://zoom.us/oauth/token", strings.NewReader(data.Encode()))
 	if err != nil {
 		return "", err
 	}
 
-	req.SetBasicAuth(clientID, clientSecret)
-	req.Header.Set("Content-Type", "application/json")
+	credentials := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", clientID, clientSecret)))
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", credentials))
+	req.Header.Set("Host", "zoom.us")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
