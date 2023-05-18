@@ -8,9 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
-	"github.com/gorilla/sessions"
 )
 
 type AccessTokenResponse struct {
@@ -18,28 +15,7 @@ type AccessTokenResponse struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-const (
-	SessionName        = "zoom_oauth_session"
-	SessionAccessToken = "access_token"
-	SessionExpiry      = "expiry"
-)
-
-var store = sessions.NewCookieStore([]byte("zoom_oauth_store"))
-
-func OAuthToken(r *http.Request, accountID string, clientID string, clientSecret string) (string, error) {
-	session, err := store.Get(r, SessionName)
-	if err != nil {
-		return "", err
-	}
-
-	// Check if a cached access token exists and is still valid
-	if accessToken, ok := session.Values[SessionAccessToken]; ok {
-		expiry, ok := session.Values[SessionExpiry].(time.Time)
-		if ok && time.Now().Before(expiry) {
-			return accessToken.(string), nil
-		}
-	}
-
+func OAuthToken(accountID string, clientID string, clientSecret string) (string, error) {
 	data := url.Values{}
 	data.Set("grant_type", "account_credentials")
 	data.Set("account_id", accountID)
@@ -76,14 +52,6 @@ func OAuthToken(r *http.Request, accountID string, clientID string, clientSecret
 		return "", err
 	}
 
-	// Cache the new access token and expiry time in the session
-	session.Values[SessionAccessToken] = accessTokenResp.AccessToken
-	session.Values[SessionExpiry] = time.Now().Add(time.Duration(accessTokenResp.ExpiresIn) * time.Second)
-	if err := store.Save(r, nil, session); err != nil {
-		return "", err
-	}
-
-	panic(accessTokenResp.AccessToken)
 	return accessTokenResp.AccessToken, nil
 }
 
@@ -93,7 +61,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	}
 
 	// establish Server-to-Server OAuth token
-	ss, err := OAuthToken(req, c.AccountID, c.ClientID, c.ClientSecret)
+	ss, err := OAuthToken(c.AccountID, c.ClientID, c.ClientSecret)
 	if err != nil {
 		return nil, err
 	}
