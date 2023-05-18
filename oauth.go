@@ -8,13 +8,24 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
 }
 
-func OAuth2Token(accountID string, clientID string, clientSecret string) (string, error) {
+var cachedAccessToken string
+var cachedTokenExpiry time.Time
+
+func OAuthToken(accountID string, clientID string, clientSecret string) (string, error) {
+
+	// Check if a cached access token exists and is still valid
+	if cachedAccessToken != "" && time.Now().Before(cachedTokenExpiry) {
+		return cachedAccessToken, nil
+	}
+
 	data := url.Values{}
 	data.Set("grant_type", "account_credentials")
 	data.Set("account_id", accountID)
@@ -51,6 +62,10 @@ func OAuth2Token(accountID string, clientID string, clientSecret string) (string
 		return "", err
 	}
 
+	// Cache the new access token and expiry time
+	cachedAccessToken = accessTokenResp.AccessToken
+	cachedTokenExpiry = time.Now().Add(time.Duration(accessTokenResp.ExpiresIn) * time.Second)
+	panic(cachedAccessToken)
 	return accessTokenResp.AccessToken, nil
 }
 
@@ -59,13 +74,13 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 		return nil, err
 	}
 
-	// establish OAuth2Token token
-	ss, err := OAuth2Token(c.AccountID, c.ClientID, c.ClientSecret)
+	// establish Server-to-Server OAuth token
+	ss, err := OAuthToken(c.AccountID, c.ClientID, c.ClientSecret)
 	if err != nil {
 		return nil, err
 	}
 
-	// set OAuth2Token Authorization header
+	// set Server-to-Server OAuth Authorization header
 	req.Header.Add("Authorization", "Bearer "+ss)
 
 	return req, nil
