@@ -1,11 +1,13 @@
 package zoom
 
 import (
-	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 type AccessTokenResponse struct {
@@ -13,16 +15,19 @@ type AccessTokenResponse struct {
 	TokenType   string `json:"token_type"`
 }
 
-func OAuth2Token(clientID string, clientSecret string) (string, error) {
-	url := "https://zoom.us/oauth/token?grant_type=client_credentials"
+func OAuth2Token(AccountID string, clientID string, clientSecret string) (string, error) {
+	data := url.Values{}
+	data.Set("grant_type", "account_credentials")
+	data.Set("account_id", AccountID)
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequest("POST", "https://zoom.us/oauth/token", strings.NewReader(data.Encode()))
 	if err != nil {
 		return "", err
 	}
 
-	req.SetBasicAuth(clientID, clientSecret)
-	req.Header.Set("Content-Type", "application/json")
+	credentials := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", clientID, clientSecret)))
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", credentials))
+	req.Header.Set("Host", "zoom.us")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -55,11 +60,11 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	}
 
 	// establish OAuth2Token token
-	ss, err := OAuth2Token(c.Key, c.Secret)
+	ss, err := OAuth2Token(c.AccountID, c.ClientID, c.ClientSecret)
 	if err != nil {
 		return nil, err
 	}
-	panic(ss)
+
 	// set OAuth2Token Authorization header
 	req.Header.Add("Authorization", "Bearer "+ss)
 
