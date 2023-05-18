@@ -58,7 +58,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	if err != nil {
 		return nil, err
 	}
-
+	panic("i am here")
 	// establish OAuth2Token token
 	ss, err := OAuth2Token(c.Key, c.Secret)
 	if err != nil {
