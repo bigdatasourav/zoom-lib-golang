@@ -22,33 +22,34 @@ func OAuth2Token(clientID string, clientSecret string) (string, error) {
 
 	req, err := http.NewRequest("POST", "https://zoom.us/oauth/token", strings.NewReader(data.Encode()))
 	if err != nil {
-		panic("http" + err.Error())
+		return "", err
 	}
 
 	credentials := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", clientID, clientSecret)))
 	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", credentials))
 	req.Header.Set("Host", "zoom.us")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic("do" + err.Error())
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic("ioutil" + err.Error())
+		return "", err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		panic(resp.StatusCode)
+		return "", fmt.Errorf("request failed with status code: %d", resp.StatusCode)
 	}
 
 	var accessTokenResp AccessTokenResponse
 	err = json.Unmarshal(body, &accessTokenResp)
 	if err != nil {
-		panic("Unmarshal" + err.Error())
+		return "", err
 	}
 
 	return accessTokenResp.AccessToken, nil
@@ -64,7 +65,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	if err != nil {
 		return nil, err
 	}
-	panic("ss:" + ss)
+
 	// set OAuth2Token Authorization header
 	req.Header.Add("Authorization", "Bearer "+ss)
 
