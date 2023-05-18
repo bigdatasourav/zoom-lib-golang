@@ -41,10 +41,6 @@ func OAuth2Token(clientID string, clientSecret string) (string, error) {
 		panic("ioutil" + err.Error())
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		panic(resp.StatusCode)
-	}
-
 	var accessTokenResp AccessTokenResponse
 	err = json.Unmarshal(body, &accessTokenResp)
 	if err != nil {
@@ -64,7 +60,7 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 	if err != nil {
 		return nil, err
 	}
-	panic("ss:" + ss)
+
 	// set OAuth2Token Authorization header
 	req.Header.Add("Authorization", "Bearer "+ss)
 
