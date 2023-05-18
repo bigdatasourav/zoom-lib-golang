@@ -81,7 +81,7 @@ func initializeDefault(c *Client) *Client {
 
 func (c *Client) executeRequest(opts requestV2Opts) (*http.Response, error) {
 	client := c.httpClient()
-	req, err := c.addRequestOAuth(c.httpRequest(opts))
+	req, err := c.addRequestAuth(c.httpRequest(opts))
 	if err != nil {
 		return nil, err
 	}
