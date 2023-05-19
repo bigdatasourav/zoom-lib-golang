@@ -29,3 +29,14 @@ func (c *Client) GetMeetingRecordings(opts GetMeetingRecordingsOptions) (CloudRe
 		Ret:           &ret,
 	})
 }
+
+// GetMeetingRecordings calls /meetings/{meetingId}/recordings endpoint
+func (c *OAuthClient) GetMeetingRecordings(opts GetMeetingRecordingsOptions) (CloudRecordingMeeting, error) {
+	var ret = CloudRecordingMeeting{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetMeetingRecordingsPath, opts.MeetingID),
+		URLParameters: &opts,
+		Ret:           &ret,
+	})
+}

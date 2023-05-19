@@ -36,3 +36,4 @@ func (c *OAuthClient) GetAccountManagedDomains(opts GetAccountManagedDomainsOpts
 		Ret:           &ret,
 	})
 }
+ 

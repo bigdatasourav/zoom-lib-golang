@@ -69,3 +69,15 @@ func (c *Client) ListMeetings(opts ListMeetingsOptions) (ListMeetingsResponse, e
 		Ret:           &ret,
 	})
 }
+
+// ListMeetings calls /users/ID/meetings
+// https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+func (c *OAuthClient) ListMeetings(opts ListMeetingsOptions) (ListMeetingsResponse, error) {
+	var ret = ListMeetingsResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(ListMeetingsPath, opts.HostID),
+		URLParameters: &opts,
+		Ret:           &ret,
+	})
+}

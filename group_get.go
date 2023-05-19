@@ -25,3 +25,14 @@ func (c *Client) GetGroup(opts GetGroupOpts) (Group, error) {
 		Ret:           &ret,
 	})
 }
+
+// GetGroup calls /groups/{groupId}, searching for a group by ID or email, using a specific client
+func (c *OAuthClient) GetGroup(opts GetGroupOpts) (Group, error) {
+	var ret = Group{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetGroupPath, opts.ID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

@@ -26,3 +26,14 @@ func (c *Client) GetUser(opts GetUserOpts) (User, error) {
 		Ret:           &ret,
 	})
 }
+
+// GetUser calls /users/{userId}, searching for a user by ID or email, using a specific client
+func (c *OAuthClient) GetUser(opts GetUserOpts) (User, error) {
+	var ret = User{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetUserPath, opts.EmailOrID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

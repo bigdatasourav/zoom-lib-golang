@@ -18,3 +18,13 @@ func (c *Client) ListGroups() (ListGroupsResponse, error) {
 		Ret:    &ret,
 	})
 }
+
+// ListGroups calls /group/list, listing all groups, using client c
+func (c *OAuthClient) ListGroups() (ListGroupsResponse, error) {
+	var ret = ListGroupsResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method: Get,
+		Path:   ListGroupsPath,
+		Ret:    &ret,
+	})
+}

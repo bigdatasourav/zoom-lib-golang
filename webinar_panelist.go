@@ -35,3 +35,13 @@ func (c *Client) GetWebinarPanelists(webinarID int) (GetWebinarPanelistsResponse
 		Ret:    &ret,
 	})
 }
+
+// GetWebinarPanelists calls /webinar/panelists using client c
+func (c *OAuthClient) GetWebinarPanelists(webinarID int) (GetWebinarPanelistsResponse, error) {
+	var ret = GetWebinarPanelistsResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method: Get,
+		Path:   fmt.Sprintf(GetWebinarPanelistsPath, webinarID),
+		Ret:    &ret,
+	})
+}

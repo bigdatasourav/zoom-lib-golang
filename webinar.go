@@ -75,6 +75,18 @@ func (c *Client) ListWebinars(opts ListWebinarsOptions) (ListWebinarsResponse, e
 	})
 }
 
+// ListWebinars calls /webinar/list, listing all webinars that don't require
+// registration, using the client c
+func (c *OAuthClient) ListWebinars(opts ListWebinarsOptions) (ListWebinarsResponse, error) {
+	var ret = ListWebinarsResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(ListWebinarsPath, opts.HostID),
+		URLParameters: &opts,
+		Ret:           &ret,
+	})
+}
+
 // GetWebinarInfo gets into about a single webinar, using the default client
 func GetWebinarInfo(webinarID int) (Webinar, error) {
 	return defaultClient.GetWebinarInfo(webinarID)
@@ -82,6 +94,16 @@ func GetWebinarInfo(webinarID int) (Webinar, error) {
 
 // GetWebinarInfo gets into about a single webinar, using client c
 func (c *Client) GetWebinarInfo(webinarID int) (Webinar, error) {
+	var ret = Webinar{}
+	return ret, c.requestV2(requestV2Opts{
+		Method: Get,
+		Path:   fmt.Sprintf(GetWebinarInfoPath, webinarID),
+		Ret:    &ret,
+	})
+}
+
+// GetWebinarInfo gets into about a single webinar, using client c
+func (c *OAuthClient) GetWebinarInfo(webinarID int) (Webinar, error) {
 	var ret = Webinar{}
 	return ret, c.requestV2(requestV2Opts{
 		Method: Get,

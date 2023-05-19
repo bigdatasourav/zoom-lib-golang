@@ -18,3 +18,13 @@ func (c *Client) ListRoles() (ListRolesResponse, error) {
 		Ret:    &ret,
 	})
 }
+
+// ListRoles calls /role/list, listing all roles, using client c
+func (c *OAuthClient) ListRoles() (ListRolesResponse, error) {
+	var ret = ListRolesResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method: Get,
+		Path:   ListRolesPath,
+		Ret:    &ret,
+	})
+}

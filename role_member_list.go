@@ -43,3 +43,14 @@ func (c *Client) ListRoleMembers(opts ListRoleMembersOptions) (ListRoleMembersRe
 		Ret:           &ret,
 	})
 }
+
+// ListRoleMembers calls /role/list, listing all roles, using client c
+func (c *OAuthClient) ListRoleMembers(opts ListRoleMembersOptions) (ListRoleMembersResponse, error) {
+	var ret = ListRoleMembersResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(ListRoleMembersPath, opts.RoleID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

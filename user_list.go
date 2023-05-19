@@ -37,3 +37,14 @@ func (c *Client) ListUsers(opts ListUsersOptions) (ListUsersResponse, error) {
 		Ret:           &ret,
 	})
 }
+
+// ListUsers calls /user/list, listing all users, using client c
+func (c *OAuthClient) ListUsers(opts ListUsersOptions) (ListUsersResponse, error) {
+	var ret = ListUsersResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          ListUsersPath,
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

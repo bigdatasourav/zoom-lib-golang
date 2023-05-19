@@ -117,3 +117,14 @@ func (c *Client) ListWebinarRegistrants(opts ListWebinarRegistrantsOptions) (Lis
 		Ret:           &ret,
 	})
 }
+
+// ListWebinarRegistrants lists webinars using client c
+func (c *OAuthClient) ListWebinarRegistrants(opts ListWebinarRegistrantsOptions) (ListWebinarRegistrantsResponse, error) {
+	var ret = ListWebinarRegistrantsResponse{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(RegisterForWebinarPath, opts.WebinarID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

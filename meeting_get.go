@@ -27,3 +27,15 @@ func (c *Client) GetMeeting(opts GetMeetingOptions) (Meeting, error) {
 		Ret:           &ret,
 	})
 }
+
+// GetMeeting calls /meetings/ID
+// https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meeting
+func (c *OAuthClient) GetMeeting(opts GetMeetingOptions) (Meeting, error) {
+	var ret = Meeting{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetMeetingPath, opts.MeetingID),
+		URLParameters: &opts,
+		Ret:           &ret,
+	})
+}
