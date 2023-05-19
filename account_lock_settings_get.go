@@ -27,3 +27,14 @@ func (c *Client) GetAccountLockSettings(opts GetAccountLockSettingsOpts) (Accoun
 		Ret:           &ret,
 	})
 }
+
+// GetAccountLockSettings calls /users/{userId}, searching for a user by ID or email, using a server-to-server oauth client
+func (c *OAuthClient) GetAccountLockSettings(opts GetAccountLockSettingsOpts) (AccountLockSettings, error) {
+	var ret = AccountLockSettings{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetAccountLockSettingsPath, opts.AccountID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

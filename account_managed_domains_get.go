@@ -25,3 +25,14 @@ func (c *Client) GetAccountManagedDomains(opts GetAccountManagedDomainsOpts) (Ac
 		Ret:           &ret,
 	})
 }
+
+// GetAccountManagedDomains calls /users/{userId}, searching for a user by ID or email, using a server-to-server oauth client
+func (c *OAuthClient) GetAccountManagedDomains(opts GetAccountManagedDomainsOpts) (AccountManagedDomains, error) {
+	var ret = AccountManagedDomains{}
+	return ret, c.requestV2(requestV2Opts{
+		Method:        Get,
+		Path:          fmt.Sprintf(GetAccountManagedDomainsPath, opts.AccountID),
+		URLParameters: opts,
+		Ret:           &ret,
+	})
+}

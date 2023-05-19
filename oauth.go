@@ -55,7 +55,7 @@ func OAuthToken(accountID string, clientID string, clientSecret string) (string,
 	return accessTokenResp.AccessToken, nil
 }
 
-func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, error) {
+func (c *OAuthClient) addRequestAuth(req *http.Request, err error) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
