@@ -18,6 +18,8 @@ type tokenInfo struct {
 	ExpirationTime time.Time
 }
 
+var count int = 0
+
 type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
@@ -29,7 +31,8 @@ func OAuthToken(accountID string, clientID string, clientSecret string) (string,
 	if exists && !tokenData.ExpirationTime.Before(time.Now()) {
 		return tokenData.Token, nil
 	}
-
+	count++
+	fmt.Println("count:", count)
 	data := url.Values{}
 	data.Set("grant_type", "account_credentials")
 	data.Set("account_id", accountID)
