@@ -28,13 +28,3 @@ func (c *Client) GetAccountSettings(opts GetAccountSettingsOpts) (AccountSetting
 	})
 }
 
-// GetAccountSettings gets the account settings for a master or sub account
-func (c *OAuthClient) GetAccountSettings(opts GetAccountSettingsOpts) (AccountSettings, error) {
-	var ret = AccountSettings{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(GetAccountSettingsPath, opts.AccountID),
-		URLParameters: opts,
-		Ret:           &ret,
-	})
-}

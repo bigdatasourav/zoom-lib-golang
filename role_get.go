@@ -26,13 +26,3 @@ func (c *Client) GetRole(opts GetRoleOpts) (Role, error) {
 	})
 }
 
-// GetRole calls /roles/{roleId}, searching for a role by ID or email, using a specific client
-func (c *OAuthClient) GetRole(opts GetRoleOpts) (Role, error) {
-	var ret = Role{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(GetRolePath, opts.ID),
-		URLParameters: opts,
-		Ret:           &ret,
-	})
-}

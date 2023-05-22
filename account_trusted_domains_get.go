@@ -26,13 +26,3 @@ func (c *Client) GetAccountTrustedDomains(opts GetAccountTrustedDomainsOpts) (Ac
 	})
 }
 
-// GetAccountTrustedDomains calls /users/{userId}, searching for a user by ID or email, using a specific client
-func (c *OAuthClient) GetAccountTrustedDomains(opts GetAccountTrustedDomainsOpts) (AccountTrustedDomains, error) {
-	var ret = AccountTrustedDomains{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(GetAccountTrustedDomainsPath, opts.AccountID),
-		URLParameters: opts,
-		Ret:           &ret,
-	})
-}

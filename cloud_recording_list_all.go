@@ -63,15 +63,3 @@ func (c *Client) ListAllRecordings(opts ListAllRecordingsOptions) (ListAllRecord
 		Ret:           &ret,
 	})
 }
-
-// ListAllRecordings calls /users/{user_id}/recordings endpoint
-// and gets all cloud recordings for a user, using the c client
-func (c *OAuthClient) ListAllRecordings(opts ListAllRecordingsOptions) (ListAllRecordingsResponse, error) {
-	var ret = ListAllRecordingsResponse{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(ListAllRecordingsPath, opts.UserID),
-		URLParameters: &opts,
-		Ret:           &ret,
-	})
-}

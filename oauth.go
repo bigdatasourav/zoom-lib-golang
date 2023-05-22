@@ -8,7 +8,15 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
+
+var tokenCache = make(map[string]tokenInfo)
+
+type tokenInfo struct {
+	Token          string
+	ExpirationTime time.Time
+}
 
 type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
@@ -16,6 +24,12 @@ type AccessTokenResponse struct {
 }
 
 func OAuthToken(accountID string, clientID string, clientSecret string) (string, error) {
+	tokenData, exists := tokenCache[accountID+clientID]
+
+	if exists && !tokenData.ExpirationTime.Before(time.Now()) {
+		return tokenData.Token, nil
+	}
+
 	data := url.Values{}
 	data.Set("grant_type", "account_credentials")
 	data.Set("account_id", accountID)
@@ -52,22 +66,14 @@ func OAuthToken(accountID string, clientID string, clientSecret string) (string,
 		return "", err
 	}
 
+	// set the expiration time for the token to be 5 minutes less than the actual expiry time
+	expirationTime := time.Now().Add(time.Second * time.Duration(accessTokenResp.ExpiresIn-300))
+	tokenData = tokenInfo{
+		Token:          accessTokenResp.AccessToken,
+		ExpirationTime: expirationTime,
+	}
+
+	tokenCache[accountID+clientID] = tokenData
+
 	return accessTokenResp.AccessToken, nil
-}
-
-func (c *OAuthClient) addRequestAuth(req *http.Request, err error) (*http.Request, error) {
-	if err != nil {
-		return nil, err
-	}
-
-	// establish Server-to-Server OAuth token
-	ss, err := OAuthToken(c.AccountID, c.ClientID, c.ClientSecret)
-	if err != nil {
-		return nil, err
-	}
-
-	// set Server-to-Server OAuth Authorization header
-	req.Header.Add("Authorization", "Bearer "+ss)
-
-	return req, nil
 }

@@ -30,16 +30,6 @@ func (c *Client) GetMeetingRecordingSettings(opts GetMeetingRecordingSettingsOpt
 	})
 }
 
-// GetMeetingRecordingSettings calls /meetings/{meetingId}/recordings/settings endpoint
-func (c *OAuthClient) GetMeetingRecordingSettings(opts GetMeetingRecordingSettingsOptions) (CloudRecordingSettings, error) {
-	var ret = CloudRecordingSettings{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(GetMeetingRecordingSettingsPath, opts.MeetingID),
-		URLParameters: &opts,
-		Ret:           &ret,
-	})
-}
 
 // CloudRecordingSettings represents settings for a recording
 type CloudRecordingSettings struct {

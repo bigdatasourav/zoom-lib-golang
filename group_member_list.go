@@ -34,13 +34,3 @@ func (c *Client) ListGroupMembers(opts ListGroupMembersOptions) (ListGroupMember
 	})
 }
 
-// ListGroupMembers calls /group/list, listing all groups, using client c
-func (c *OAuthClient) ListGroupMembers(opts ListGroupMembersOptions) (ListGroupMembersResponse, error) {
-	var ret = ListGroupMembersResponse{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(ListGroupMembersPath, opts.GroupID),
-		URLParameters: opts,
-		Ret:           &ret,
-	})
-}

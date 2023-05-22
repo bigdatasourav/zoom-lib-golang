@@ -1,7 +1,6 @@
 package zoom
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -25,18 +24,25 @@ func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, er
 		return nil, err
 	}
 
-	// establish JWT token
-	ss, err := jwtToken(c.Key, c.Secret)
-	if err != nil {
-		return nil, err
+	var token string
+	if c.AccountID != "" {
+		// establish Server-to-Server OAuth token
+		oAuthToken, oauthErr := OAuthToken(c.AccountID, c.ClientID, c.ClientSecret)
+		if oauthErr != nil {
+			return nil, oauthErr
+		}
+		token = oAuthToken
+	} else {
+		// establish JWT token
+		jwtToken, jwtErr := jwtToken(c.Key, c.Secret)
+		if jwtErr != nil {
+			return nil, jwtErr
+		}
+		token = jwtToken
 	}
 
-	if Debug {
-		log.Println("JWT Token: " + ss)
-	}
-
-	// set JWT Authorization header
-	req.Header.Add("Authorization", "Bearer "+ss)
+	// set token in authorization header
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	return req, nil
 }

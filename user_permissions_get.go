@@ -26,17 +26,6 @@ func (c *Client) GetUserPermissions(opts GetUserPermissionsOpts) (UserPermission
 	})
 }
 
-// GetUserPermissions calls /users/{userId}/permissions
-func (c *OAuthClient) GetUserPermissions(opts GetUserPermissionsOpts) (UserPermissions, error) {
-	var ret = UserPermissions{}
-	return ret, c.requestV2(requestV2Opts{
-		Method:        Get,
-		Path:          fmt.Sprintf(GetUserPermissionsPath, opts.UserID),
-		URLParameters: opts,
-		Ret:           &ret,
-	})
-}
-
 type UserPermissions struct {
 	Permissions []string `json:"permissions"`
 }
